@@ -18,7 +18,7 @@
       align-items:flex-start;
       min-height:100vh;
       overflow-x:hidden;
-      padding-bottom:200px; /* space for bouquet */
+      padding-bottom:200px; /* extra space for bouquet */
     }
 
     /* Start Screen */
@@ -76,37 +76,43 @@
     .fade{ animation: fadeUp .9s ease both; }
     @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
 
-    /* Bouquet bottom */
+    /* Bouquet SVGs (fixed at bottom) */
     .bouquet {
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
-      max-width: 900px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 5px 10px;
+      max-width: 750px;
+      pointer-events: none;
       z-index: 10;
-      pointer-events:none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: -20px;
     }
-    .flower {
-      width: 120px;
+    .bouquet img {
+      width: 100%;
       height: auto;
       display: block;
     }
-    /* Random variations */
-    .f1 { transform: scale(1) translateY(0px); }
-    .f2 { transform: scale(0.9) translateY(10px) scaleX(-1); }
-    .f3 { transform: scale(1.1) translateY(-8px); }
-    .f4 { transform: scale(0.8) translateY(12px) scaleX(-1); }
-    .f5 { transform: scale(1) translateY(-5px); }
-    .f6 { transform: scale(0.95) translateY(15px) scaleX(-1); }
+    .bouquet .layer {
+      width: 100%;
+      position: relative;
+    }
+    .bouquet .layer.flip {
+      transform: scaleX(-1) translateY(-20px);
+      opacity: 0.95;
+    }
+    .bouquet .layer.small {
+      width: 85%;
+      margin-top: -25px;
+      opacity: 0.9;
+    }
 
     @media(max-width:480px){
-      body{ padding-bottom: 170px; }
-      .bouquet .flower{ width: 80px; }
+      body{ padding-bottom: 160px; }
+      .bouquet{ max-width: 100%; }
     }
   </style>
 </head>
@@ -125,14 +131,17 @@
     </div>
   </div>
 
-  <!-- Bouquet (multiple flowers, filled look) -->
+  <!-- Fixed Bouquet SVG layers -->
   <div class="bouquet">
-    <img src="flowers.svg" alt="Flower" class="flower f1">
-    <img src="flowers.svg" alt="Flower" class="flower f2">
-    <img src="flowers.svg" alt="Flower" class="flower f3">
-    <img src="flowers.svg" alt="Flower" class="flower f4">
-    <img src="flowers.svg" alt="Flower" class="flower f5">
-    <img src="flowers.svg" alt="Flower" class="flower f6">
+    <div class="layer">
+      <img src="flowers.svg" alt="Bouquet 1">
+    </div>
+    <div class="layer flip">
+      <img src="flowers.svg" alt="Bouquet 2 flipped">
+    </div>
+    <div class="layer small">
+      <img src="flowers.svg" alt="Bouquet 3 small">
+    </div>
   </div>
 
   <!-- Background Music -->
@@ -175,9 +184,10 @@
       mainContent.style.display = "flex";
       audio.play().catch(()=>{});
 
-      // Confetti raining
+      // Confetti raining from top to bottom (and staying)
       const duration = 5 * 1000;
       const end = Date.now() + duration;
+
       (function frame() {
         confetti({
           particleCount: 5,
@@ -187,7 +197,9 @@
           gravity: 1,
           ticks: 300
         });
-        if (Date.now() < end) requestAnimationFrame(frame);
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
       }());
 
       showLines();
