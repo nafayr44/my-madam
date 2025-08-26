@@ -10,6 +10,7 @@
       font-family: 'Poppins', sans-serif;
       background: #f7efe6;
       min-height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,14 +28,18 @@
     }
 
     .btn {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: bold;
       color: #fff;
       background: #ff6f61;
-      padding: 15px 25px;
+      padding: 18px 30px;
       border-radius: 30px;
       cursor: pointer;
       border: none;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      line-height: 1.4;
       box-shadow: 0 5px 10px rgba(0,0,0,0.2);
       transition: 0.3s;
     }
@@ -48,6 +53,7 @@
       flex-direction: column;
       width: 100%;
       height: 100vh;
+      justify-content: flex-start;
       align-items: center;
       padding: 10px;
     }
@@ -60,7 +66,10 @@
       text-align: center;
       width: 95%;
       max-width: 400px;
-      margin-top: 10px; /* top aligned */
+      flex: 1; /* fill bottom */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
     .card img {
       width: 100%;
@@ -75,46 +84,91 @@
     .animated-text {
       font-size: 15px;
       color: #444;
-      min-height: 50px;
+      min-height: 60px;
       margin-top: 10px;
       overflow: hidden;
     }
     .fade {
-      animation: fadeUp 1s ease forwards;
+      animation: fadeUp 1.5s ease forwards;
     }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Flowers bottom row */
+    .flowers {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-end;
+      height: 120px;
+      pointer-events: none;
+    }
+    .flower {
+      width: 30px;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: sway 3s infinite ease-in-out;
+    }
+    .stem {
+      width: 4px;
+      height: 60px;
+      background: green;
+      border-radius: 2px;
+    }
+    .petal {
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      margin-top: -10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(5deg); }
     }
   </style>
 </head>
 <body>
   <!-- Start Screen -->
   <div id="start-screen">
-    <button class="btn" id="start-btn">Mamoona Tap Here</button>
+    <button class="btn" id="start-btn">
+      Mamoona<br>Tap Here
+    </button>
   </div>
 
   <!-- Main Content -->
   <div id="main-content">
     <div class="card">
-      <!-- 🎂 IMAGE -->
       <img src="birthday.jpg" alt="Birthday Pic">
-
       <h2>Happy Birthday</h2>
       <div class="animated-text" id="animated-text"></div>
     </div>
+    <!-- Flowers at bottom -->
+    <div class="flowers">
+      <div class="flower"><div class="stem"></div><div class="petal"></div></div>
+      <div class="flower"><div class="stem"></div><div class="petal"></div></div>
+      <div class="flower"><div class="stem"></div><div class="petal"></div></div>
+      <div class="flower"><div class="stem"></div><div class="petal"></div></div>
+      <div class="flower"><div class="stem"></div><div class="petal"></div></div>
+    </div>
   </div>
 
-  <!-- 🎶 BACKGROUND MUSIC -->
+  <!-- Background Music -->
   <audio id="bg-music" loop>
     <source src="song.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- 🎊 Confetti JS -->
+  <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
-    // 🎉 2-line animated text
     const lines = [
       "Happy birthday to one of my favorite people!",
       "You make life more beautiful ❤️",
@@ -127,7 +181,7 @@
 
     function showLines() {
       textBox.innerHTML = "";
-      for (let i = 0; i < 2; i++) { // show 2 lines at a time
+      for (let i = 0; i < 2; i++) {
         const line = document.createElement("div");
         line.textContent = lines[(index + i) % lines.length];
         line.classList.add("fade");
@@ -136,30 +190,36 @@
       index = (index + 2) % lines.length;
     }
 
-    // 🎵 Music & start button
     const audio = document.getElementById("bg-music");
     const startBtn = document.getElementById("start-btn");
     const startScreen = document.getElementById("start-screen");
     const mainContent = document.getElementById("main-content");
 
     startBtn.addEventListener("click", () => {
-      // Hide start, show main
       startScreen.style.display = "none";
       mainContent.style.display = "flex";
-
-      // Play music
       audio.play();
 
-      // Confetti blast
-      confetti({
-        particleCount: 250,
-        spread: 120,
-        origin: { y: 0.2 }
-      });
+      // Confetti raining from top to bottom (and staying)
+      const duration = 5 * 1000;
+      const end = Date.now() + duration;
 
-      // Start text animation
+      (function frame() {
+        confetti({
+          particleCount: 5,
+          startVelocity: 20,
+          spread: 60,
+          origin: { x: Math.random(), y: 0 }, // from top
+          gravity: 1, // fall down and stay
+          ticks: 300 // longer life
+        });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+
       showLines();
-      setInterval(showLines, 4000);
+      setInterval(showLines, 6000); // slower text change
     });
   </script>
 </body>
