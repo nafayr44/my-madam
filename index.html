@@ -3,15 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Happy Birthday — With White Rose Bouquet</title>
+  <title>Happy Birthday</title>
   <style>
     :root{
       --bg: #f7efe6;
     }
-    html,body{height:100%; margin:0; padding:0; background:var(--bg); font-family:'Poppins',sans-serif; -webkit-font-smoothing:antialiased;}
+    html,body{
+      height:100%; margin:0; padding:0; background:var(--bg);
+      font-family:'Poppins',sans-serif;
+    }
     body{
-      display:flex; justify-content:center; align-items:flex-start; min-height:100vh; overflow-x:hidden;
-      padding-bottom: calc(env(safe-area-inset-bottom) + 130px); /* leave room for bouquet on mobile */
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+      overflow-x:hidden;
+      padding-bottom:180px; /* space for bouquet */
     }
 
     /* Start Screen */
@@ -38,9 +45,8 @@
       text-align: center;
       line-height: 1.4;
       box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-      transition: transform .18s ease;
     }
-    .btn:active{ transform: translateY(2px); }
+
     /* Main Content */
     #main-content {
       display: none;
@@ -70,95 +76,26 @@
     .fade{ animation: fadeUp .9s ease both; }
     @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
 
-    /* Confetti stays (unchanged) */
-
-    /* --- Bouquet (fixed, across pages) --- */
+    /* Bouquet SVG (fixed at bottom) */
     .bouquet {
-      --bouquet-height: 120px; /* adjust overall height */
       position: fixed;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 0;
       width: 100%;
-      max-width: 1100px;
-      height: calc(var(--bouquet-height) + env(safe-area-inset-bottom));
-      pointer-events: none; /* so underlying buttons still clickable */
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      z-index: 15;
-      padding-bottom: env(safe-area-inset-bottom);
+      max-width: 700px;
+      pointer-events: none; /* click pass-through */
+      z-index: 10;
+    }
+    .bouquet img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
-    .bouquet-inner {
-      position: relative;
-      height: var(--bouquet-height);
-      display: flex;
-      gap: 6px;
-      align-items: flex-end;
-      transform: translateY(6px);
-    }
-
-    /* Single rose component uses inline SVG for crisp look */
-    .rose {
-      width: 48px;
-      height: 100%;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      transform-origin: 50% 100%;
-      animation: gentle-sway 4s ease-in-out infinite;
-    }
-    /* Slight offset for variety */
-    .rose.r1{ transform: translateY(0) scale(1); animation-delay: 0s; }
-    .rose.r2{ transform: translateY(4px) scale(.95); animation-delay: .4s; }
-    .rose.r3{ transform: translateY(2px) scale(1.05); animation-delay: .9s; }
-    .rose.r4{ transform: translateY(6px) scale(.98); animation-delay: 1.3s; }
-    .rose.r5{ transform: translateY(3px) scale(.92); animation-delay: .7s; }
-
-    @keyframes gentle-sway {
-      0% { transform: translateY(0) rotate(-2deg) scale(1); }
-      50% { transform: translateY(3px) rotate(3deg) scale(1.01); }
-      100% { transform: translateY(0) rotate(-2deg) scale(1); }
-    }
-
-    /* Stem layering: stems are slightly darker and appear behind petals */
-    .stem-svg { filter: drop-shadow(0 1px 0 rgba(0,0,0,0.02)); opacity:.95; }
-
-    /* Bouquet wrap (binding ribbon) */
-    .wrap {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      width: 120px;
-      height: 56px;
-      border-radius: 14px 14px 30px 30px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
-      display:flex; align-items:center; justify-content:center;
-      pointer-events: none;
-      z-index: 2;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      backdrop-filter: blur(2px);
-    }
-    .wrap:after{
-      content:"";
-      position:absolute;
-      top:-8px;
-      left: calc(50% - 32px);
-      width:64px;
-      height:12px;
-      border-radius:6px;
-      background: rgba(255,255,255,0.7);
-      transform: rotate(-12deg);
-    }
-
-    /* Responsive: smaller on mobile */
-    @media (max-width:480px){
-      .rose{ width:36px; }
-      :root{ --bg: #f7efe6; }
-      .card{ margin-bottom:140px; } /* ensure bouquet doesn't overlap important content */
-      .wrap{ width:92px; height:46px; }
+    @media(max-width:480px){
+      body{ padding-bottom: 150px; }
+      .bouquet{ max-width: 100%; }
     }
   </style>
 </head>
@@ -175,89 +112,11 @@
       <h2>Happy Birthday</h2>
       <div class="animated-text" id="animated-text"></div>
     </div>
-    <!-- add more page content here if you want... -->
   </div>
 
-  <!-- Fixed bouquet at bottom (stays across pages / views) -->
-  <div class="bouquet" aria-hidden="true">
-    <div class="bouquet-inner">
-      <!-- Each rose is an inline SVG (white petals). Stems are part of same SVG so they align perfectly. -->
-      <div class="rose r1">
-        <svg viewBox="0 0 60 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
-          <!-- stem -->
-          <g class="stem-svg" fill="none" stroke="#2b7a3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 40 C28 60, 28 80, 30 100" />
-          </g>
-          <!-- leaf -->
-          <path d="M30 60 C20 58, 18 68, 28 70 C34 72, 36 66, 30 60" fill="#2b7a3a" opacity="0.95"/>
-          <!-- petals (white roses) -->
-          <g transform="translate(30,28)">
-            <ellipse rx="14" ry="10" fill="#ffffff" stroke="#efeef0" stroke-width="0.6" />
-            <path d="M-6 -2 C-10 -6, -2 -12, 6 -6 C10 -2, 8 6, 2 8 C-6 10, -8 6, -6 -2Z" fill="#fff" opacity="0.98"/>
-            <circle cx="-2" cy="0" r="3" fill="#fff" />
-          </g>
-        </svg>
-      </div>
-
-      <div class="rose r2">
-        <svg viewBox="0 0 60 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
-          <g class="stem-svg" fill="none" stroke="#2b7a3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 42 C34 62, 34 82, 30 102" />
-          </g>
-          <path d="M30 64 C40 62, 42 72, 34 74 C28 76, 26 70, 30 64" fill="#2b7a3a" opacity="0.95"/>
-          <g transform="translate(30,26)">
-            <ellipse rx="14" ry="10" fill="#ffffff" stroke="#efeef0" stroke-width="0.6" />
-            <path d="M-8 -2 C-12 -6, -4 -12, 6 -4 C10 0, 8 6, 2 8 C-6 10, -10 6, -8 -2Z" fill="#fff" opacity="0.98"/>
-            <circle cx="1" cy="1" r="3" fill="#fff" />
-          </g>
-        </svg>
-      </div>
-
-      <div class="rose r3">
-        <svg viewBox="0 0 60 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
-          <g class="stem-svg" fill="none" stroke="#2b7a3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 38 C26 58, 28 78, 32 98" />
-          </g>
-          <path d="M30 58 C20 56, 18 66, 28 68 C34 70, 36 64, 30 58" fill="#2b7a3a" opacity="0.95"/>
-          <g transform="translate(30,24)">
-            <ellipse rx="14" ry="10" fill="#ffffff" stroke="#efeef0" stroke-width="0.6" />
-            <path d="M-6 -3 C-10 -7, -2 -13, 6 -7 C10 -2, 8 5, 2 7 C-6 9, -8 6, -6 -3Z" fill="#fff" opacity="0.98"/>
-            <circle cx="-1" cy="0" r="3" fill="#fff" />
-          </g>
-        </svg>
-      </div>
-
-      <div class="rose r4">
-        <svg viewBox="0 0 60 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
-          <g class="stem-svg" fill="none" stroke="#2b7a3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 44 C32 64, 36 82, 34 100" />
-          </g>
-          <path d="M30 66 C38 64, 40 74, 34 76 C28 78, 26 72, 30 66" fill="#2b7a3a" opacity="0.95"/>
-          <g transform="translate(30,30)">
-            <ellipse rx="14" ry="10" fill="#ffffff" stroke="#efeef0" stroke-width="0.6" />
-            <path d="M-6 -2 C-10 -6, -2 -12, 6 -6 C8 -2, 6 6, 0 8 C-6 10, -10 6, -6 -2Z" fill="#fff" opacity="0.98"/>
-            <circle cx="0" cy="1" r="3" fill="#fff" />
-          </g>
-        </svg>
-      </div>
-
-      <div class="rose r5">
-        <svg viewBox="0 0 60 120" width="48" height="120" xmlns="http://www.w3.org/2000/svg">
-          <g class="stem-svg" fill="none" stroke="#2b7a3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 40 C28 58, 26 78, 28 98" />
-          </g>
-          <path d="M30 62 C22 60, 20 70, 28 72 C34 74, 36 68, 30 62" fill="#2b7a3a" opacity="0.95"/>
-          <g transform="translate(30,28)">
-            <ellipse rx="14" ry="10" fill="#ffffff" stroke="#efeef0" stroke-width="0.6" />
-            <path d="M-8 -2 C-12 -6, -4 -12, 6 -4 C8 0, 6 6, 0 8 C-6 10, -10 6, -8 -2Z" fill="#fff" opacity="0.98"/>
-            <circle cx="-1" cy="0" r="3" fill="#fff" />
-          </g>
-        </svg>
-      </div>
-
-      <!-- ribbon / wrap front -->
-      <div class="wrap" aria-hidden="true"></div>
-    </div>
+  <!-- Fixed Bouquet SVG at bottom -->
+  <div class="bouquet">
+    <img src="flowers.svg" alt="White Rose Bouquet">
   </div>
 
   <!-- Background Music -->
@@ -265,7 +124,7 @@
     <source src="song.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Confetti library (kept) -->
+  <!-- Confetti library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
@@ -298,7 +157,7 @@
     startBtn.addEventListener("click", () => {
       startScreen.style.display = "none";
       mainContent.style.display = "flex";
-      audio.play().catch(()=>{/* autoplay blocked on some browsers */});
+      audio.play().catch(()=>{});
 
       // Confetti raining from top to bottom (and staying)
       const duration = 5 * 1000;
