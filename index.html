@@ -58,12 +58,12 @@
   </div>
 
   <!-- 🎶 BACKGROUND MUSIC (replace with your uploaded file name) -->
-  <audio autoplay loop>
+  <audio id="bg-music" autoplay loop muted>
     <source src="song.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    // 🎉 Text lines animation
+    // 🎉 Text animation
     const lines = [
       "Happy birthday to one of my favorite people!",
       "You make life more beautiful ❤️",
@@ -82,7 +82,21 @@
     }
 
     showLine();
-    setInterval(showLine, 3000); // change line every 3 seconds
+    setInterval(showLine, 3000);
+
+    // 🎵 Try autoplay, else wait for user tap
+    const audio = document.getElementById("bg-music");
+    window.addEventListener('load', () => {
+      audio.muted = false;
+      audio.play().catch(() => {
+        console.log("Autoplay blocked! Waiting for user interaction...");
+      });
+    });
+
+    document.body.addEventListener('click', () => {
+      audio.muted = false;
+      audio.play();
+    }, { once: true });
   </script>
 </body>
 </html>
