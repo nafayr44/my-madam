@@ -76,43 +76,37 @@
     .fade{ animation: fadeUp .9s ease both; }
     @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
 
-    /* Bouquet SVGs (fixed at bottom) */
+    /* Bouquet Container */
     .bouquet {
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
-      max-width: 750px;
-      pointer-events: none;
+      max-width: 720px;
+      pointer-events: none; /* click pass-through */
       z-index: 10;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: -20px;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0;
     }
     .bouquet img {
-      width: 100%;
+      width: 40%;
+      max-width: 260px;
       height: auto;
       display: block;
+      position: absolute;
     }
-    .bouquet .layer {
-      width: 100%;
-      position: relative;
-    }
-    .bouquet .layer.flip {
-      transform: scaleX(-1) translateY(-20px);
-      opacity: 0.95;
-    }
-    .bouquet .layer.small {
-      width: 85%;
-      margin-top: -25px;
-      opacity: 0.9;
-    }
+    .flower1 { left: 50%; transform: translateX(-50%) scale(1); z-index: 3; }
+    .flower2 { left: 30%; transform: scaleX(-1) scale(0.95); bottom: 20px; z-index: 2; }
+    .flower3 { left: 70%; transform: scale(0.9); bottom: 25px; z-index: 2; }
+    .flower4 { left: 40%; transform: scaleX(-1) scale(0.85); bottom: 50px; z-index: 1; }
+    .flower5 { left: 60%; transform: scale(0.8); bottom: 55px; z-index: 1; }
 
     @media(max-width:480px){
       body{ padding-bottom: 160px; }
-      .bouquet{ max-width: 100%; }
+      .bouquet img { width: 55%; max-width: 200px; }
     }
   </style>
 </head>
@@ -131,17 +125,13 @@
     </div>
   </div>
 
-  <!-- Fixed Bouquet SVG layers -->
+  <!-- Fixed Bouquet SVG at bottom -->
   <div class="bouquet">
-    <div class="layer">
-      <img src="flowers.svg" alt="Bouquet 1">
-    </div>
-    <div class="layer flip">
-      <img src="flowers.svg" alt="Bouquet 2 flipped">
-    </div>
-    <div class="layer small">
-      <img src="flowers.svg" alt="Bouquet 3 small">
-    </div>
+    <img src="flowers.svg" alt="Flower" class="flower1">
+    <img src="flowers.svg" alt="Flower" class="flower2">
+    <img src="flowers.svg" alt="Flower" class="flower3">
+    <img src="flowers.svg" alt="Flower" class="flower4">
+    <img src="flowers.svg" alt="Flower" class="flower5">
   </div>
 
   <!-- Background Music -->
