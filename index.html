@@ -3,122 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday 🎉</title>
+  <title>Happy Birthday</title>
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: #f6ebdf;
+      background: #f7efe6;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      flex-direction: column;
-      overflow: hidden;
     }
-
     .card {
       background: #fff;
       padding: 20px;
       border-radius: 20px;
-      box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
       text-align: center;
       max-width: 400px;
+      position: relative;
     }
-
     .card img {
       width: 100%;
       border-radius: 15px;
-      margin-bottom: 15px;
     }
-
-    h1 {
-      font-size: 28px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    /* Text animation */
-    .animated-text {
-      font-size: 18px;
-      color: #7a3e3e;
-      font-weight: 500;
-      height: 25px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .animated-text div {
+    .flowers {
       position: absolute;
-      width: 100%;
-      animation: roll 9s infinite;
+      top: 50%;
+      left: -50px;
+      width: 100px;
+      transform: translateY(-50%);
     }
-
-    @keyframes roll {
-      0% { top: 0; }
-      20% { top: 0; }
-      25% { top: -25px; }
-      45% { top: -25px; }
-      50% { top: -50px; }
-      70% { top: -50px; }
-      75% { top: -75px; }
-      95% { top: -75px; }
-      100% { top: 0; }
+    .flowers.right {
+      left: auto;
+      right: -50px;
     }
-
-    /* Music button */
-    #musicBtn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      background: #ff7f50;
-      color: #fff;
+    h2 {
+      font-size: 24px;
+      margin: 15px 0;
+    }
+    .animated-text {
       font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      color: #444;
+      min-height: 40px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .fade {
+      animation: fadeUp 1s ease forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-
   <div class="card">
-    <!-- Replace image here -->
+    <!-- Change picture here -->
     <img src="your-image.jpg" alt="Birthday Pic">
 
-    <h1>🎂 Happy Birthday 🎂</h1>
-
-    <!-- Animated text -->
-    <div class="animated-text">
-      <div>
-        <p>Wishing you endless joy 🎉</p>
-        <p>May your dreams come true 🌸</p>
-        <p>You are truly special 💖</p>
-        <p>Enjoy your big day 🥳</p>
-      </div>
-    </div>
-
-    <!-- Music Button -->
-    <button id="musicBtn">Play Music 🎶</button>
-    <audio id="bgMusic" loop>
-      <source src="your-music.mp3" type="audio/mpeg">
-    </audio>
+    <h2>Happy Birthday</h2>
+    <div class="animated-text" id="animated-text"></div>
   </div>
 
+  <!-- Background music -->
+  <audio autoplay loop>
+    <source src="your-music.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
-    const btn = document.getElementById("musicBtn");
-    const music = document.getElementById("bgMusic");
+    const lines = [
+      "Happy birthday to one of my favorite people!",
+      "You make life more beautiful ❤️",
+      "Can’t wait to hug you soon 🎉"
+    ];
+    let index = 0;
+    const textBox = document.getElementById("animated-text");
 
-    btn.addEventListener("click", () => {
-      if (music.paused) {
-        music.play();
-        btn.textContent = "Pause Music ⏸️";
-      } else {
-        music.pause();
-        btn.textContent = "Play Music 🎶";
-      }
-    });
+    function showLine() {
+      textBox.innerHTML = "";
+      const line = document.createElement("div");
+      line.textContent = lines[index];
+      line.classList.add("fade");
+      textBox.appendChild(line);
+      index = (index + 1) % lines.length;
+    }
+
+    showLine();
+    setInterval(showLine, 3000); // 3 seconds per line
   </script>
-
 </body>
 </html>
