@@ -1,185 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday</title>
   <style>
-    :root{
-      --bg: #f7efe6;
-    }
-    html,body{
-      height:100%; margin:0; padding:0; background:var(--bg);
-      font-family:'Poppins',sans-serif;
-    }
-    body{
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      min-height:100vh;
-      overflow-x:hidden;
-      padding-bottom:180px; /* space for bouquet */
-    }
-
-    /* Start Screen */
-    #start-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Arial", sans-serif;
+      background: linear-gradient(to top, #ffdde1, #ee9ca7);
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 20;
-    }
-    .btn {
-      font-size: 22px;
-      font-weight: bold;
-      color: #fff;
-      background: #ff6f61;
-      padding: 18px 30px;
-      border-radius: 30px;
-      cursor: pointer;
-      border: none;
-      display: flex;
       flex-direction: column;
-      text-align: center;
-      line-height: 1.4;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+      position: relative;
     }
 
-    /* Main Content */
-    #main-content {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      max-width:900px;
-      gap:12px;
-      padding: 16px;
-      box-sizing: border-box;
-      z-index: 5;
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-in-out;
     }
-    .card {
-      background: #fff;
-      padding: 15px;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.12);
-      text-align: center;
-      width: 95%;
+
+    .content {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 15px;
       max-width: 600px;
-      margin: 24px auto 40px;
-      display:flex; flex-direction:column; gap:10px;
+      animation: slideUp 2s ease-in-out;
     }
-    .card img { width:100%; border-radius:12px; display:block; }
-    h2{ font-size:22px; margin:0; font-weight:600; }
-    .animated-text{ font-size:15px; color:#444; min-height:60px; overflow:hidden; display:flex; flex-direction:column; gap:6px; align-items:center; justify-content:center; }
 
-    .fade{ animation: fadeUp .9s ease both; }
-    @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+    /* 🎉 Confetti */
+    .confetti {
+      position: fixed;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      background: yellow;
+      opacity: 0.7;
+      animation: fall linear infinite;
+    }
 
-    /* Bouquet SVG (fixed at bottom) */
-    .bouquet {
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* 🎂 Bottom Flowers */
+    body::after {
+      content: "";
       position: fixed;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
       width: 100%;
-      max-width: 700px;
-      pointer-events: none; /* click pass-through */
-      z-index: 10;
-    }
-    .bouquet img {
-      width: 100%;
-      height: auto;
-      display: block;
+      height: 180px; /* height bouquet area */
+      background: url('flowers.svg') repeat-x center bottom;
+      background-size: 200px auto; /* adjust size */
+      pointer-events: none;
+      z-index: 0;
     }
 
-    @media(max-width:480px){
-      body{ padding-bottom: 150px; }
-      .bouquet{ max-width: 100%; }
+    /* ✨ Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 1.8em; }
+      .content { font-size: 0.9em; padding: 15px; }
+      body::after {
+        height: 150px;
+        background-size: 120px auto; /* chhoti screens ke liye small flowers */
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Start Screen -->
-  <div id="start-screen">
-    <button class="btn" id="start-btn">Mamoona<br/>Tap Here</button>
+  <h1>🎉 Happy Birthday! 🎂</h1>
+  <div class="content">
+    <p>May your day be filled with joy, love, and endless happiness. 💖</p>
   </div>
-
-  <!-- Main Content -->
-  <div id="main-content">
-    <div class="card">
-      <img src="birthday.jpg" alt="Birthday Pic">
-      <h2>Happy Birthday</h2>
-      <div class="animated-text" id="animated-text"></div>
-    </div>
-  </div>
-
-  <!-- Fixed Bouquet SVG at bottom -->
-  <div class="bouquet">
-    <img src="flowers.svg" alt="White Rose Bouquet">
-  </div>
-
-  <!-- Background Music -->
-  <audio id="bg-music" loop>
-    <source src="song.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Confetti library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
-    const lines = [
-      "Happy birthday to one of my favorite people!",
-      "You make life more beautiful ❤️",
-      "Can’t wait to hug you soon 🎉",
-      "Stay blessed always 🌸",
-      "Wishing you endless happiness 💕"
-    ];
-    let index = 0;
-    const textBox = document.getElementById("animated-text");
-
-    function showLines() {
-      textBox.innerHTML = "";
-      for (let i = 0; i < 2; i++) {
-        const line = document.createElement("div");
-        line.textContent = lines[(index + i) % lines.length];
-        line.classList.add("fade");
-        textBox.appendChild(line);
-      }
-      index = (index + 2) % lines.length;
+    // 🎊 Confetti create karna
+    for (let i = 0; i < 40; i++) {
+      const confetti = document.createElement("div");
+      confetti.className = "confetti";
+      confetti.style.left = Math.random() * 100 + "vw";
+      confetti.style.backgroundColor = ["#ff0", "#0f0", "#0ff", "#f0f", "#fff"][Math.floor(Math.random() * 5)];
+      confetti.style.animationDuration = (2 + Math.random() * 3) + "s";
+      document.body.appendChild(confetti);
     }
-
-    const audio = document.getElementById("bg-music");
-    const startBtn = document.getElementById("start-btn");
-    const startScreen = document.getElementById("start-screen");
-    const mainContent = document.getElementById("main-content");
-
-    startBtn.addEventListener("click", () => {
-      startScreen.style.display = "none";
-      mainContent.style.display = "flex";
-      audio.play().catch(()=>{});
-
-      // Confetti raining from top to bottom (and staying)
-      const duration = 5 * 1000;
-      const end = Date.now() + duration;
-
-      (function frame() {
-        confetti({
-          particleCount: 5,
-          startVelocity: 20,
-          spread: 60,
-          origin: { x: Math.random(), y: 0 },
-          gravity: 1,
-          ticks: 300
-        });
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      }());
-
-      showLines();
-      setInterval(showLines, 6000);
-    });
   </script>
 </body>
 </html>
